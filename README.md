@@ -19,7 +19,7 @@ Create databse ``sqlite3 readings.sqlite``, and create table ``create table read
 Then just ``make`` it, and run ``sudo ./rpi_receiver``
 
 # Sender (Arduino/ATtiny)
-I'm using this https://github.com/damellis/attiny/tree/ide-1.5.x to build it for 
+I'm using this https://github.com/damellis/attiny/tree/ide-1.5.x to build it for ATtiny85.
 
 ```
 Sketch uses 5,828 bytes (71%) of program storage space. Maximum is 8,192 bytes.
