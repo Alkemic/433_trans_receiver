@@ -1,7 +1,7 @@
 /*
   temp_transmitter - readings sender from attiny board
   Copyright (c) 2014 Daniel Alkemic Czuba.  All right reserved.
-  
+
   Project home: https://github.com/Alkemic/433_trans_receiver
 
   This library is free software; you can redistribute it and/or
@@ -23,9 +23,8 @@
 #include <avr/sleep.h>
 
 // Sensor address can be easily obtained using OneWire's DS18x22_Temperature sketch
-#define DS_ADDR {0x28, 0x99, 0x77, 0xFC, 0x05, 0x0, 0x00, 0x53}
-#define DS_PIN 11 // 3
-#define TX_PIN 10 // 4
+#define DS_PIN 2 // 3
+#define TX_PIN 3 // 4
 #define NODE_ID 1
 
 // utility macros
@@ -39,7 +38,7 @@ RCSwitch tx = RCSwitch();
 byte i;
 byte present = 0;
 byte data[12];
-byte addr[8] = {0x28, 0x99, 0x77, 0xFC, 0x05, 0x0, 0x00, 0x53};
+byte addr[8] = {0x00};
 byte cfg;
 unsigned int raw;
 unsigned long packet;
@@ -48,17 +47,19 @@ void setup(void) {
   adc_disable();
   tx.enableTransmit(TX_PIN);
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+
+  ds.search(addr);
 }
 
 void loop(void) {
   ds.reset();
   ds.select(addr);
   ds.write(0x44, 1);
-  
+
   delay(1000);
-  
+
   present = ds.reset();
-  ds.select(addr);    
+  ds.select(addr);
   ds.write(0xBE);
 
   for ( i = 0; i < 9; i++) {
@@ -81,4 +82,3 @@ void loop(void) {
   tx.send(packet, 32);
   delay(60000);
 }
-
