@@ -17,6 +17,21 @@
 #define GET_BIT(var, pos) (((var) & (1<<(pos))) >> pos)
 #define checksum_correct(value, checksum) (checksum == (GET_BIT(value, 7) << 3) | (GET_BIT(value, 5) << 2) | (GET_BIT(value, 3) << 1) | GET_BIT(value, 1))
 
+char *sql;
+RCSwitch receiver;
+sqlite3 *db;
+sqlite3_stmt * stmt;
+char *zErrMsg = 0;
+int rc;
+
+uint32_t value;
+uint8_t node_id;
+uint8_t checksum;
+
+void clean_on_exit(void){
+	sqlite3_close(db);
+}
+
 static int callback(void *NotUsed, int argc, char **argv, char **azColName){
     int i;
     for(i=0; i<argc; i++){
@@ -27,16 +42,7 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName){
 }
 
 int main(int argc, char *argv[]){
-    char *sql;
-    RCSwitch receiver;
-    sqlite3 *db;
-    sqlite3_stmt * stmt;
-    char *zErrMsg = 0;
-    int rc;
-
-    uint32_t value;
-    uint8_t node_id;
-    uint8_t checksum;
+    atexit(clean_on_exit);
 
     if(wiringPiSetup() == -1)
        return 2;
